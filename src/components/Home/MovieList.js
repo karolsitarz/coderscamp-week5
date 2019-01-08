@@ -1,69 +1,18 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import styled, { css } from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import tmdb from '../apis/tmdb';
-const IMG_URL = 'https://image.tmdb.org/t/p/';
-const IMG_QUALITY = {
-  low: 'w92',
-  high: 'w500'
-};
+import tmdb from '../../apis/tmdb';
+import Poster from './MovieListPoster';
 
-const StyledPoster = styled.div`
-  width: 15em;
-  height: 22.5em;
-  transition: .3s ease transform;
-  position: relative;
-  background: #00000022;
-  border-radius: 1em;
-  overflow: hidden;
-
-  :hover {
-    cursor: pointer;
-    transform: scale(0.95);
-  }
-`;
-
-const StyledPosterImg = styled.img`
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  text-align: center;
-`;
-
-class Poster extends Component {
-  componentDidMount () {
-    this.imgRef.onload = e => {
-      e.target.setAttribute('src', (IMG_URL + IMG_QUALITY.high + this.props.img));
-    };
-  }
-  render () {
-    const { alt, img, movieID } = this.props;
-    return (
-      <Link to={`/details/${movieID}`}>
-        <StyledPoster>
-          <StyledPosterImg
-            ref={e => (this.imgRef = e)}
-            alt={alt}
-            src={img ? IMG_URL + IMG_QUALITY.low + img : ''} />
-        </StyledPoster>
-      </Link>
-    );
-  }
-}
-
+// whole list
 const StyledMoviePanelContainer = styled.section`
   position: relative;
   width: 100vw;
-  overflow: hidden;
+  overflow-x: hidden;
 `;
 
+// single panel, containing 4 tiles
 const StyledMoviePanel = styled.div`
   position: relative;
   width: 100vw;
@@ -74,6 +23,14 @@ const StyledMoviePanel = styled.div`
   padding: 0 5em;
 `;
 
+// div containing all panels, so they can scroll
+const StyledScrollingList = styled.div`
+  display: inline-flex;
+  transition: transform .5s ease;
+  transform: ${props => `translateX(-${props.$page * 100}vw)`};
+`;
+
+// buttons
 const StyledArrowButton = styled.div`
   width: 5em;
   height: 5em;
@@ -85,14 +42,22 @@ const StyledArrowButton = styled.div`
   left: ${props => props.$left ? 0 : 'initial'};
   right: ${props => props.$right ? 0 : 'initial'};
   cursor: pointer;
+  opacity: 0.3;
+  transition: 
+    opacity .3s ease,
+    transform .3s ease;
+
+  :hover {
+    opacity: 0.5;
+    transform: scale(1.1);
+  }
+  ${props => props.$visible && css`
+    opacity: 0 !important;
+    pointer-events: none;
+  `}
 `;
 
-const StyledScrollingList = styled.div`
-  display: inline-flex;
-  transition: transform .5s ease;
-  transform: ${props => `translateX(-${props.$page * 100}vw)`}
-`;
-
+// get data of 4 tiles and transform into JSX
 const fetchTilesToArray = (results, j = 0) => {
   let moviesList = [];
   for (let i = j * 4; i < j * 4 + 4; i++) {
@@ -120,7 +85,7 @@ export default class MovieList extends Component {
     }).then(({ results }) => {
       this.setState({
         movies: results,
-        moviesList: [fetchTilesToArray(results)]
+        moviesList: [...this.state.moviesList, fetchTilesToArray(results)]
       });
     });
   }
@@ -167,7 +132,7 @@ export default class MovieList extends Component {
           {moviesList}
         </StyledScrollingList>
 
-        <StyledArrowButton $left onClick={e => this.slideLeft()}>
+        <StyledArrowButton $visible={page === 0} $left onClick={e => this.slideLeft()}>
           <FontAwesomeIcon icon='arrow-left' size='3x' />
         </StyledArrowButton>
         <StyledArrowButton $right onClick={e => this.slideRight()}>
