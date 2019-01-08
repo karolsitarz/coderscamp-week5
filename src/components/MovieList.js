@@ -15,6 +15,9 @@ const StyledPoster = styled.div`
   height: 22.5em;
   transition: .3s ease transform;
   position: relative;
+  background: #00000022;
+  border-radius: 1em;
+  overflow: hidden;
 
   :hover {
     cursor: pointer;
@@ -31,6 +34,7 @@ const StyledPosterImg = styled.img`
   top: 0;
   right: 0;
   bottom: 0;
+  text-align: center;
 `;
 
 class Poster extends Component {
@@ -47,7 +51,7 @@ class Poster extends Component {
           <StyledPosterImg
             ref={e => (this.imgRef = e)}
             alt={alt}
-            src={IMG_URL + IMG_QUALITY.low + img} />
+            src={img ? IMG_URL + IMG_QUALITY.low + img : ''} />
         </StyledPoster>
       </Link>
     );
@@ -57,7 +61,7 @@ class Poster extends Component {
 const StyledMoviePanelContainer = styled.section`
   position: relative;
   width: 100vw;
-  /* overflow: hidden; */
+  overflow: hidden;
 `;
 
 const StyledMoviePanel = styled.div`
@@ -80,7 +84,27 @@ const StyledArrowButton = styled.div`
   align-items: center;
   left: ${props => props.$left ? 0 : 'initial'};
   right: ${props => props.$right ? 0 : 'initial'};
+  cursor: pointer;
 `;
+
+const StyledScrollingList = styled.div`
+  display: inline-flex;
+  transition: transform .5s ease;
+  transform: ${props => `translateX(-${props.$page * 100}vw)`}
+`;
+
+const fetchTilesToArray = (results, j = 0) => {
+  let moviesList = [];
+  for (let i = j * 4; i < j * 4 + 4; i++) {
+    moviesList.push(
+      <Poster
+        key={results[i].id}
+        movieID={results[i].id}
+        img={results[i].poster_path}
+        alt={results[i].original_title} />);
+  }
+  return (<StyledMoviePanel key={j}>{moviesList}</StyledMoviePanel>);
+};
 
 export default class MovieList extends Component {
   constructor (props) {
@@ -94,40 +118,59 @@ export default class MovieList extends Component {
     tmdb(`/discover/movie`, {
       sort_by: `${props.sortBy}.desc` || ''
     }).then(({ results }) => {
-      console.log(results);
-
-      let moviesList = [];
-      for (let i = 0; i < 4; i++) {
-        moviesList.push(
-          <Poster
-            key={results[i].id}
-            movieID={results[i].id}
-            img={results[i].poster_path}
-            alt={results[i].original_title} />);
-      }
       this.setState({
         movies: results,
-        moviesList
+        moviesList: [fetchTilesToArray(results)]
       });
     });
   }
+  slideLeft () {
+    if (this.state.page === 0) return;
+    this.setState({ page: this.state.page - 1 });
+  }
+
+  slideRight () {
+    const { page, moviesList, movies } = this.state;
+    const newPage = page * 1 + 1;
+
+    // if can scroll right and is on the border of rendered tiles
+    if (newPage === moviesList.length && newPage * 4 < movies.length) {
+      this.setState({
+        page: newPage,
+        moviesList: [...moviesList, fetchTilesToArray(movies, newPage)]
+      });
+
+      // if there is a need to fetch new tiles
+    } else if (newPage * 4 > movies.length - 4) {
+      tmdb(`/discover/movie`, {
+        sort_by: (`${this.props.sortBy}.desc` || ''),
+        page: (Math.floor(movies.length / 20) + 1)
+      }).then(({ results }) => {
+        this.setState({
+          movies: [...movies, ...results]
+        });
+        this.slideRight();
+      });
+      // else, just move the tiles
+    } else {
+      this.setState({ page: newPage });
+    }
+  }
 
   render () {
-    const { moviesList } = this.state;
+    const { moviesList, page } = this.state;
     if (moviesList.length < 1) return null;
 
     return (
       <StyledMoviePanelContainer>
-        <div style={{ display: 'inline-flex' }}>
-          <StyledMoviePanel>
-            {moviesList}
-          </StyledMoviePanel>
-        </div>
+        <StyledScrollingList $page={page}>
+          {moviesList}
+        </StyledScrollingList>
 
-        <StyledArrowButton $left>
+        <StyledArrowButton $left onClick={e => this.slideLeft()}>
           <FontAwesomeIcon icon='arrow-left' size='3x' />
         </StyledArrowButton>
-        <StyledArrowButton $right>
+        <StyledArrowButton $right onClick={e => this.slideRight()}>
           <FontAwesomeIcon icon='arrow-right' size='3x' />
         </StyledArrowButton>
       </StyledMoviePanelContainer>
