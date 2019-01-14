@@ -8,14 +8,16 @@ import Details from './components/Details';
 import Navbar from './components/Navbar';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
-library.add(faArrowLeft, faArrowRight);
+import { faArrowLeft, faArrowRight , faShoppingCart} from '@fortawesome/free-solid-svg-icons';
+import Reservation from './components/Reservation';
+library.add(faArrowLeft, faArrowRight, faShoppingCart);
 
 const App = () => (
   <BrowserRouter>
     <div>
       <Navbar />
       <Switch>
+        <Route path='/details/buytickets/:movieID' component={Reservation} />
         <Route path='/details/:movieID' component={Details} />
         <Route exact path='/' component={Home} />
       </Switch>
