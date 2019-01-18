@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import tmdb from '../apis/tmdb';
 import styled from 'styled-components';
+import YoutubeEmbedVideo from 'youtube-embed-video';
 
 export default class Details extends Component {
   constructor (props) {
@@ -10,7 +11,7 @@ export default class Details extends Component {
       overview: '',
       genres: '',
       year: '',
-      videoId: '',
+      trailerID: '',
       movieID: props.match.params.movieID,
       img: ''
     };
@@ -34,8 +35,11 @@ export default class Details extends Component {
       if (!res.posters[0].file_path) return;
       this.setState({ img: res.posters[0].file_path });
     });
-    tmdb(`/movie/${id}/videos`).then(res => {
-
+    tmdb(`/movie/${id}/videos`, { language: 'en' }).then(res => {
+      if (!res || !res.results || !res.results[0]) return;
+      if (!res.results[0].key) return;
+      console.log(res.results[0]);
+      this.setState({ trailerID: res.results[0].key });
     });
   }
   componentDidUpdate () {
@@ -59,6 +63,8 @@ export default class Details extends Component {
           <p>{this.state.overview}</p>
           <h4>Genres:</h4>
           <p>{!Array.isArray(this.state.genres) ? null : this.state.genres.map(c => c.name).join(', ')}</p>
+          {!this.state.trailerID ? null
+            : <YoutubeEmbedVideo videoId={this.state.trailerID} suggestions={false} />}
         </StyledContent>
       </Section>
     );
@@ -72,6 +78,12 @@ const Section = styled.section`
 const StyledContent = styled.div`
   flex-grow: 1;
   margin: 2em;
+  display: flex;
+  flex-direction: column;
+  > iframe {
+    align-self: center;
+    margin-top: 2em;
+  }
 `;
 const StyledImg = styled.img`
   width: 500px;
