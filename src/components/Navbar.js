@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { withRouter } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Link, withRouter } from 'react-router-dom';
 
 import tmdb from '../apis/tmdb';
 
@@ -9,16 +10,30 @@ const StyledNavbar = styled.nav`
   padding: 1em;
   background: whitesmoke;
   display: flex;
-  justify-content: flex-end;
   align-items: center;
+  a {
+    color: #bbb;
+    margin: 0 1em;
+    transition: transform .3s ease;
+    :hover {
+      cursor: pointer;
+      transform: scale(0.9);
+    }
+  }
 `;
 
 const StyledInput = styled.input`
   border: 0;
   border-radius: 3em;
-  background: #ddd;
+  background: #e5e5e5;
+  color: inherit;
   padding: .5em 2em;
   outline: none;
+  margin-left: auto;
+`;
+
+const StyledForm = styled.form`
+  margin-left: auto;
 `;
 
 class Navbar extends Component {
@@ -41,18 +56,24 @@ class Navbar extends Component {
         return;
       }
       this.props.history.push(`/details/${res.results[0].id}`);
+      this.setState({ value: '' });
     });
   }
   render () {
+    console.log(this.props.history);
     return (
       <StyledNavbar>
-        <form onSubmit={e => this.sendData(e)}>
+        {this.props.history.location.pathname !== '/'
+          ? (<Link to='/'>
+            <FontAwesomeIcon icon='home' size='2x' />
+          </Link>) : null}
+        <StyledForm onSubmit={e => this.sendData(e)}>
           <StyledInput
             onChange={e => this.setState({ value: e.target.value })}
             placeholder='Search for a movie...'
             value={this.state.value}
             type='text' />
-        </form>
+        </StyledForm>
       </StyledNavbar>
     );
   }
