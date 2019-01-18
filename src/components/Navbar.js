@@ -60,7 +60,6 @@ class Navbar extends Component {
     });
   }
   render () {
-    console.log(this.props.history);
     return (
       <StyledNavbar>
         {this.props.history.location.pathname !== '/'
