@@ -11,6 +11,8 @@ const StyledNavbar = styled.nav`
   background: whitesmoke;
   display: flex;
   align-items: center;
+  position: relative;
+  
   a {
     color: #bbb;
     margin: 0 1em;
@@ -19,6 +21,16 @@ const StyledNavbar = styled.nav`
       cursor: pointer;
       transform: scale(0.9);
     }
+  }
+  ::before {
+    content: "";
+    width: 100vw;
+    height: 100%;
+    background: inherit;
+    position: absolute;
+    top: 0;
+    z-index: -1;
+    left: calc(-50vw + 600px);
   }
 `;
 
