@@ -9,6 +9,7 @@ import Poster from './MovieListPoster';
 const StyledMoviePanelContainer = styled.section`
   position: relative;
   width: 100vw;
+  max-width:100%;
   overflow-x: hidden;
 `;
 
@@ -16,6 +17,7 @@ const StyledMoviePanelContainer = styled.section`
 const StyledMoviePanel = styled.div`
   position: relative;
   width: 100vw;
+  max-width:100%;
   display: flex;
   align-items: center;
   justify-content: space-evenly;
