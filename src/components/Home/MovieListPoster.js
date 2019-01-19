@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import NoPoster from '../../utils/noPosterFound';
 
 const IMG_URL = 'https://image.tmdb.org/t/p/';
 const IMG_QUALITY = {
@@ -15,7 +16,10 @@ const StyledPoster = styled.div`
     .3s ease box-shadow,
     .3s ease transform;
   position: relative;
-  background: #00000022;
+  background-color: #00000022;
+  background-size: cover;
+  background-position: center;
+  background-image: url(${NoPoster});
   border-radius: 1em;
   overflow: hidden;
   margin: .5em;

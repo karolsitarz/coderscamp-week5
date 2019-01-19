@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import tmdb from '../apis/tmdb';
 import styled from 'styled-components';
 import YoutubeEmbedVideo from 'youtube-embed-video';
+import NoPoster from '../utils/noPosterFound';
 
 export default class Details extends Component {
   constructor (props) {
@@ -111,6 +112,10 @@ const StyledImg = styled.img`
   max-height: calc(3 / 2 * 30vw);
   border-radius: 2em;
   box-shadow: 0 0 1em #00000011;
+  background-color: #00000022;
+  background-size: cover;
+  background-position: center;
+  background-image: url(${NoPoster});
 `;
 class Poster extends Component {
   componentDidMount () {
