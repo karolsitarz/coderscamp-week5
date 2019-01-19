@@ -67,7 +67,7 @@ class Navbar extends Component {
         window.alert('no movie found');
         return;
       }
-      this.props.history.push(`/details/${res.results[0].id}`);
+      this.props.history.push(`${process.env.PUBLIC_URL}/details/${res.results[0].id}`);
       this.setState({ value: '' });
     });
   }
@@ -75,7 +75,7 @@ class Navbar extends Component {
     return (
       <StyledNavbar>
         {this.props.history.location.pathname !== '/'
-          ? (<Link to='/'>
+          ? (<Link to={`${process.env.PUBLIC_URL}/`}>
             <FontAwesomeIcon icon='home' size='2x' />
           </Link>) : null}
         <StyledForm onSubmit={e => this.sendData(e)}>

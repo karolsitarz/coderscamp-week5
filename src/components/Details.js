@@ -32,12 +32,12 @@ export default class Details extends Component {
         year: res.release_date.split('-')[0]
       });
     });
-    tmdb(`/movie/${id}/images`, { language: 'en' }).then(res => {
+    tmdb(`/movie/${id}/images`).then(res => {
       if (!res || !res.posters || !res.posters[0]) return;
       if (!res.posters[0].file_path) return;
       this.setState({ img: res.posters[0].file_path });
     });
-    tmdb(`/movie/${id}/videos`, { language: 'en' }).then(res => {
+    tmdb(`/movie/${id}/videos`).then(res => {
       if (!res || !res.results || !res.results[0]) return;
       if (!res.results[0].key) return;
       // console.log(res.results[0]);
@@ -65,7 +65,7 @@ export default class Details extends Component {
           <p>{this.state.overview}</p>
           <h4>Genres:</h4>
           <p>{!Array.isArray(this.state.genres) ? null : this.state.genres.map(c => c.name).join(', ')}</p>
-          <Link to={`/details/buytickets/${this.props.match.params.movieID}`}>
+          <Link to={`${process.env.PUBLIC_URL}/details/${this.props.match.params.movieID}/buy`}>
             <StyledButton type='button' value='BUY TICKETS' />
           </Link>
           {!this.state.trailerID ? null

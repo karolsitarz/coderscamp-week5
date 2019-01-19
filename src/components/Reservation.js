@@ -153,7 +153,7 @@ export default class Reservation extends React.Component {
         <StyledTopMovieInfo>
           <h1>{this.state.movieName}</h1>
           <h3>20.01.2019   20:45</h3>
-          <Link to={`/details/${this.props.match.params.movieID}`}>
+          <Link to={`${process.env.PUBLIC_URL}/details/${this.props.match.params.movieID}`}>
             <StyledCloseButton>
               <FontAwesomeIcon icon='arrow-left' size='1x' />
             </StyledCloseButton>
