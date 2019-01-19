@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import tmdb from '../apis/tmdb';
 import styled from 'styled-components';
 import YoutubeEmbedVideo from 'youtube-embed-video';
@@ -39,7 +39,7 @@ export default class Details extends Component {
     tmdb(`/movie/${id}/videos`, { language: 'en' }).then(res => {
       if (!res || !res.results || !res.results[0]) return;
       if (!res.results[0].key) return;
-      console.log(res.results[0]);
+      // console.log(res.results[0]);
       this.setState({ trailerID: res.results[0].key });
     });
   }
@@ -64,11 +64,9 @@ export default class Details extends Component {
           <p>{this.state.overview}</p>
           <h4>Genres:</h4>
           <p>{!Array.isArray(this.state.genres) ? null : this.state.genres.map(c => c.name).join(', ')}</p>
-            <Link>
-              <div>
-                <button>AAA</button>
-              </div>
-            </Link>
+          <Link to={`/details/buytickets/${this.props.match.params.movieID}`}>
+            <StyledButton type='button' value='BUY TICKETS' />
+          </Link>
           {!this.state.trailerID ? null
             : <YoutubeEmbedVideo videoId={this.state.trailerID} suggestions={false} />}
         </StyledContent>
@@ -76,6 +74,21 @@ export default class Details extends Component {
     );
   }
 }
+
+const StyledButton = styled.input`
+  padding: 1em 3em;
+  border: 0;
+  background: #333;
+  color: #fff;
+  border-radius: 10em;
+  font-weight: bold;
+  transition: .3s ease transform;
+
+  :hover {
+    cursor: pointer;
+    transform: scale(0.95);
+  }
+`;
 
 const Section = styled.section`
   display: flex;
