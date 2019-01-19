@@ -23,7 +23,7 @@ const StyledScreeningRoom = styled.div`
   align-items: center;
   
   > ::before {
-  content: "";
+  content: '';
   display: inline-block;
   width: 1px;
   height: 80;
@@ -58,7 +58,7 @@ const StyledCloseButton = styled.button`
 const StyledScreen = styled.div`
   background-color: whitesmoke;
   width: 60%;
-  margin: 20px auto ;
+  margin: 20px auto;
   font-size: 20px;
 `;
 const StyledRowName = styled.p`
@@ -100,28 +100,47 @@ const StyledShoppingCartButton = styled.div`
 export default class Reservation extends React.Component {
   constructor (props) {
     super(props);
+    const reservedinit = 'reserved';
     this.state = {
       price: 0,
       numOfTickets: 0,
       seats: [],
       id: props.match.params,
-      movieName: ''
+      movieName: '',
+      reservedSeats: this.getLocalMemory(reservedinit)
     };
+    this.getstatus = this.getstatus.bind(this);
   }
-
   componentDidMount () {
-    // console.log(this.state.id.movieID);
+    const reserved = 'reserved';
     tmdb(`/movie/${this.state.id.movieID}`).then((
       results
     ) => {
-      // console.log(results);
       this.setState({
-        movieName: results.title
+        movieName: results.title,
+        reservedSeats: this.getLocalMemory(reserved)
       });
     });
-    this.getstatus = this.getstatus.bind(this);
   }
-
+  getLocalMemory (value) {
+    return JSON.parse(window.localStorage.getItem(value));
+  }
+  setLocalMemory (key) {
+    let acctualStorage = JSON.parse(window.localStorage.getItem('reserved'));
+    if (acctualStorage == null) {
+      acctualStorage = [];
+    }
+    if (acctualStorage != null && this.state.seats.length > 0) {
+      this.state.seats.map((seat) => { return acctualStorage.push(seat); });
+    }
+    window.localStorage.setItem(key, JSON.stringify(acctualStorage));
+    this.setState({
+      reservedSeats: this.getLocalMemory('reserved'),
+      price: 0,
+      numOfTickets: 0,
+      seats: []
+    });
+  }
   deleteSeat (x, name) {
     let arr = x;
     let index = arr.indexOf(name);
@@ -144,9 +163,15 @@ export default class Reservation extends React.Component {
         seats: this.deleteSeat(this.state.seats, name)
       });
     }
-    // console.log(this.state.seats);
   }
 
+  include (name) {
+    let isInclude = false;
+    if (this.state.reservedSeats) {
+      isInclude = this.state.reservedSeats.includes(name);
+    }
+    return isInclude;
+  }
   render () {
     return (
       <StyledReservationSite>
@@ -162,117 +187,123 @@ export default class Reservation extends React.Component {
         <StyledScreen>SCREEN</StyledScreen>
         <StyledScreeningRoom>
           <StyledRowName site='right'>A</StyledRowName>
-          <Seat fun={this.getstatus} name={'A1'} />
-          <Seat fun={this.getstatus} name={'A2'} />
-          <Seat fun={this.getstatus} name={'A3'} />
-          <Seat fun={this.getstatus} name={'A4'} />
-          <Seat fun={this.getstatus} name={'A5'} />
-          <Seat fun={this.getstatus} name={'A6'} />
-          <Seat fun={this.getstatus} name={'A7'} />
-          <Seat fun={this.getstatus} name={'A8'} />
-          <Seat fun={this.getstatus} name={'A9'} />
-          <Seat fun={this.getstatus} name={'A10'} />
+          <Seat fun={this.getstatus} name={'A1'} isReserved={this.include('A1')} />
+          <Seat fun={this.getstatus} name={'A2'} isReserved={this.include('A2')} />
+          <Seat fun={this.getstatus} name={'A3'} isReserved={this.include('A3')} />
+          <Seat fun={this.getstatus} name={'A4'} isReserved={this.include('A4')} />
+          <Seat fun={this.getstatus} name={'A5'} isReserved={this.include('A5')} />
+          <Seat fun={this.getstatus} name={'A6'} isReserved={this.include('A6')} />
+          <Seat fun={this.getstatus} name={'A7'} isReserved={this.include('A7')} />
+          <Seat fun={this.getstatus} name={'A8'} isReserved={this.include('A8')} />
+          <Seat fun={this.getstatus} name={'A9'} isReserved={this.include('A9')} />
+          <Seat fun={this.getstatus} name={'A10'} isReserved={this.include('A10')} />
           <StyledRowName site='left'>A</StyledRowName>
 
           <StyledRowName site='right'>B</StyledRowName>
-          <Seat fun={this.getstatus} name={'B1'} />
-          <Seat fun={this.getstatus} name={'B2'} />
-          <Seat fun={this.getstatus} name={'B3'} />
-          <Seat fun={this.getstatus} name={'B4'} />
-          <Seat fun={this.getstatus} name={'B5'} />
-          <Seat fun={this.getstatus} name={'B6'} />
-          <Seat fun={this.getstatus} name={'B7'} />
-          <Seat fun={this.getstatus} name={'B8'} />
-          <Seat fun={this.getstatus} name={'B9'} />
-          <Seat fun={this.getstatus} name={'B10'} />
+          <Seat fun={this.getstatus} name={'B1'} isReserved={this.include('B1')} />
+          <Seat fun={this.getstatus} name={'B2'} isReserved={this.include('B2')} />
+          <Seat fun={this.getstatus} name={'B3'} isReserved={this.include('B3')} />
+          <Seat fun={this.getstatus} name={'B4'} isReserved={this.include('B4')} />
+          <Seat fun={this.getstatus} name={'B5'} isReserved={this.include('B5')} />
+          <Seat fun={this.getstatus} name={'B6'} isReserved={this.include('B6')} />
+          <Seat fun={this.getstatus} name={'B7'} isReserved={this.include('B7')} />
+          <Seat fun={this.getstatus} name={'B8'} isReserved={this.include('B8')} />
+          <Seat fun={this.getstatus} name={'B9'} isReserved={this.include('B9')} />
+          <Seat fun={this.getstatus} name={'B10'} isReserved={this.include('B10')} />
           <StyledRowName site='left'>B</StyledRowName>
 
           <StyledRowName site='right'>C</StyledRowName>
-          <Seat fun={this.getstatus} name={'C1'} />
-          <Seat fun={this.getstatus} name={'C2'} />
-          <Seat fun={this.getstatus} name={'C3'} />
-          <Seat fun={this.getstatus} name={'C4'} />
-          <Seat fun={this.getstatus} name={'C5'} />
-          <Seat fun={this.getstatus} name={'C6'} />
-          <Seat fun={this.getstatus} name={'C7'} />
-          <Seat fun={this.getstatus} name={'C8'} />
-          <Seat fun={this.getstatus} name={'C9'} />
-          <Seat fun={this.getstatus} name={'C10'} />
+          <Seat fun={this.getstatus} name={'C1'} isReserved={this.include('C1')} />
+          <Seat fun={this.getstatus} name={'C2'} isReserved={this.include('C2')} />
+          <Seat fun={this.getstatus} name={'C3'} isReserved={this.include('C3')} />
+          <Seat fun={this.getstatus} name={'C4'} isReserved={this.include('C4')} />
+          <Seat fun={this.getstatus} name={'C5'} isReserved={this.include('C5')} />
+          <Seat fun={this.getstatus} name={'C6'} isReserved={this.include('C6')} />
+          <Seat fun={this.getstatus} name={'C7'} isReserved={this.include('C7')} />
+          <Seat fun={this.getstatus} name={'C8'} isReserved={this.include('C8')} />
+          <Seat fun={this.getstatus} name={'C9'} isReserved={this.include('C9')} />
+          <Seat fun={this.getstatus} name={'C10'} isReserved={this.include('C10')} />
           <StyledRowName site='left'>C</StyledRowName>
 
           <StyledRowName site='right'>D</StyledRowName>
-          <Seat fun={this.getstatus} name={'D1'} />
-          <Seat fun={this.getstatus} name={'D2'} />
-          <Seat fun={this.getstatus} name={'D3'} />
-          <Seat fun={this.getstatus} name={'D4'} />
-          <Seat fun={this.getstatus} name={'D5'} />
-          <Seat fun={this.getstatus} name={'D6'} />
-          <Seat fun={this.getstatus} name={'D7'} />
-          <Seat fun={this.getstatus} name={'D8'} />
-          <Seat fun={this.getstatus} name={'D9'} />
-          <Seat fun={this.getstatus} name={'D10'} />
+          <Seat fun={this.getstatus} name={'D1'} isReserved={this.include('D1')} />
+          <Seat fun={this.getstatus} name={'D2'} isReserved={this.include('D2')} />
+          <Seat fun={this.getstatus} name={'D3'} isReserved={this.include('D3')} />
+          <Seat fun={this.getstatus} name={'D4'} isReserved={this.include('D4')} />
+          <Seat fun={this.getstatus} name={'D5'} isReserved={this.include('D5')} />
+          <Seat fun={this.getstatus} name={'D6'} isReserved={this.include('D6')} />
+          <Seat fun={this.getstatus} name={'D7'} isReserved={this.include('D7')} />
+          <Seat fun={this.getstatus} name={'D8'} isReserved={this.include('D8')} />
+          <Seat fun={this.getstatus} name={'D9'} isReserved={this.include('D9')} />
+          <Seat fun={this.getstatus} name={'D10'} isReserved={this.include('D10')} />
           <StyledRowName site='left'>D</StyledRowName>
 
           <StyledRowName site='right'>E</StyledRowName>
-          <Seat fun={this.getstatus} name={'E1'} />
-          <Seat fun={this.getstatus} name={'E2'} />
-          <Seat fun={this.getstatus} name={'E3'} />
-          <Seat fun={this.getstatus} name={'E4'} />
-          <Seat fun={this.getstatus} name={'E5'} />
-          <Seat fun={this.getstatus} name={'E6'} />
-          <Seat fun={this.getstatus} name={'E7'} />
-          <Seat fun={this.getstatus} name={'E8'} />
-          <Seat fun={this.getstatus} name={'E9'} />
-          <Seat fun={this.getstatus} name={'E10'} />
+          <Seat fun={this.getstatus} name={'E1'} isReserved={this.include('E1')} />
+          <Seat fun={this.getstatus} name={'E2'} isReserved={this.include('E2')} />
+          <Seat fun={this.getstatus} name={'E3'} isReserved={this.include('E3')} />
+          <Seat fun={this.getstatus} name={'E4'} isReserved={this.include('E4')} />
+          <Seat fun={this.getstatus} name={'E5'} isReserved={this.include('E5')} />
+          <Seat fun={this.getstatus} name={'E6'} isReserved={this.include('E6')} />
+          <Seat fun={this.getstatus} name={'E7'} isReserved={this.include('E7')} />
+          <Seat fun={this.getstatus} name={'E8'} isReserved={this.include('E8')} />
+          <Seat fun={this.getstatus} name={'E9'} isReserved={this.include('E9')} />
+          <Seat fun={this.getstatus} name={'E10'} isReserved={this.include('E10')} />
           <StyledRowName site='left'>E</StyledRowName>
 
           <StyledRowName site='right'>F</StyledRowName>
-          <Seat fun={this.getstatus} name={'F1'} />
-          <Seat fun={this.getstatus} name={'F2'} />
-          <Seat fun={this.getstatus} name={'F3'} />
-          <Seat fun={this.getstatus} name={'F4'} />
-          <Seat fun={this.getstatus} name={'F5'} />
-          <Seat fun={this.getstatus} name={'F6'} />
-          <Seat fun={this.getstatus} name={'F7'} />
-          <Seat fun={this.getstatus} name={'F8'} />
-          <Seat fun={this.getstatus} name={'F9'} />
-          <Seat fun={this.getstatus} name={'F10'} />
+          <Seat fun={this.getstatus} name={'F1'} isReserved={this.include('F1')} />
+          <Seat fun={this.getstatus} name={'F2'} isReserved={this.include('F2')} />
+          <Seat fun={this.getstatus} name={'F3'} isReserved={this.include('F3')} />
+          <Seat fun={this.getstatus} name={'F4'} isReserved={this.include('F4')} />
+          <Seat fun={this.getstatus} name={'F5'} isReserved={this.include('F5')} />
+          <Seat fun={this.getstatus} name={'F6'} isReserved={this.include('F6')} />
+          <Seat fun={this.getstatus} name={'F7'} isReserved={this.include('F7')} />
+          <Seat fun={this.getstatus} name={'F8'} isReserved={this.include('F8')} />
+          <Seat fun={this.getstatus} name={'F9'} isReserved={this.include('F9')} />
+          <Seat fun={this.getstatus} name={'F10'} isReserved={this.include('F10')} />
           <StyledRowName site='left'>F</StyledRowName>
 
           <StyledRowName site='right'>G</StyledRowName>
-          <Seat fun={this.getstatus} name={'G1'} />
-          <Seat fun={this.getstatus} name={'G2'} />
-          <Seat fun={this.getstatus} name={'G3'} />
-          <Seat fun={this.getstatus} name={'G4'} />
-          <Seat fun={this.getstatus} name={'G5'} />
-          <Seat fun={this.getstatus} name={'G6'} />
-          <Seat fun={this.getstatus} name={'G7'} />
-          <Seat fun={this.getstatus} name={'G8'} />
-          <Seat fun={this.getstatus} name={'G9'} />
-          <Seat fun={this.getstatus} name={'G10'} />
+          <Seat fun={this.getstatus} name={'G1'} isReserved={this.include('G1')} />
+          <Seat fun={this.getstatus} name={'G2'} isReserved={this.include('G2')} />
+          <Seat fun={this.getstatus} name={'G3'} isReserved={this.include('G3')} />
+          <Seat fun={this.getstatus} name={'G4'} isReserved={this.include('G4')} />
+          <Seat fun={this.getstatus} name={'G5'} isReserved={this.include('G5')} />
+          <Seat fun={this.getstatus} name={'G6'} isReserved={this.include('G6')} />
+          <Seat fun={this.getstatus} name={'G7'} isReserved={this.include('G7')} />
+          <Seat fun={this.getstatus} name={'G8'} isReserved={this.include('G8')} />
+          <Seat fun={this.getstatus} name={'G9'} isReserved={this.include('G9')} />
+          <Seat fun={this.getstatus} name={'G10'} isReserved={this.include('G10')} />
           <StyledRowName site='left'>G</StyledRowName>
 
           <StyledRowName site='right'>H</StyledRowName>
-          <Seat fun={this.getstatus} name={'H1'} />
-          <Seat fun={this.getstatus} name={'H2'} />
-          <Seat fun={this.getstatus} name={'H3'} />
-          <Seat fun={this.getstatus} name={'H4'} />
-          <Seat fun={this.getstatus} name={'H5'} />
-          <Seat fun={this.getstatus} name={'H6'} />
-          <Seat fun={this.getstatus} name={'H7'} />
-          <Seat fun={this.getstatus} name={'H8'} />
-          <Seat fun={this.getstatus} name={'H9'} />
-          <Seat fun={this.getstatus} name={'H10'} />
+          <Seat fun={this.getstatus} name={'H1'} isReserved={this.include('H1')} />
+          <Seat fun={this.getstatus} name={'H2'} isReserved={this.include('H2')} />
+          <Seat fun={this.getstatus} name={'H3'} isReserved={this.include('H3')} />
+          <Seat fun={this.getstatus} name={'H4'} isReserved={this.include('H4')} />
+          <Seat fun={this.getstatus} name={'H5'} isReserved={this.include('H5')} />
+          <Seat fun={this.getstatus} name={'H6'} isReserved={this.include('H6')} />
+          <Seat fun={this.getstatus} name={'H7'} isReserved={this.include('H7')} />
+          <Seat fun={this.getstatus} name={'H8'} isReserved={this.include('H8')} />
+          <Seat fun={this.getstatus} name={'H9'} isReserved={this.include('H9')} />
+          <Seat fun={this.getstatus} name={'H10'} isReserved={this.include('H10')} />
           <StyledRowName site='left'>H</StyledRowName>
         </StyledScreeningRoom>
         <StyledShoppingCart>
-          <StyledParagraphInfo>CURRENT PRICE: {this.state.price}$</StyledParagraphInfo>
-          <StyledParagraphInfo>NO. OF TICKETS: {this.state.numOfTickets}</StyledParagraphInfo>
-          <StyledParagraphInfo>SEATS: {this.state.seats.map(seat => { return seat + ' '; })}</StyledParagraphInfo>
+          <StyledParagraphInfo>
+            CURRENT PRICE: {this.state.price}$
+          </StyledParagraphInfo>
+          <StyledParagraphInfo>
+            NUMBER OF TICKETS: {this.state.numOfTickets}
+          </StyledParagraphInfo>
+          <StyledParagraphInfo>
+            SEATS: {this.state.seats.map(seat => { return seat + ' '; })}
+          </StyledParagraphInfo>
         </StyledShoppingCart>
-        <StyledShoppingCartButton $number={this.state.numOfTickets}>
+        <StyledShoppingCartButton $number={this.state.numOfTickets} onClick={e => this.setLocalMemory('reserved')} >
           BUY TICKETS
-          <FontAwesomeIcon icon='shopping-cart' size='1x' style={{ marginLeft: '.5em' }} />
+          <FontAwesomeIcon icon='shopping-cart' size='2x' style={{ marginLeft: '.5em' }} />
         </StyledShoppingCartButton>
       </StyledReservationSite>
     );
