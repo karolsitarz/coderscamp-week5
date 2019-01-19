@@ -23,9 +23,9 @@ const App = () => (
     <Main>
       <Navbar />
       <Switch>
-        <Route path='/details/buytickets/:movieID' component={Reservation} />
-        <Route path='/details/:movieID' component={Details} />
-        <Route exact path='/' component={Home} />
+        <Route path={process.env.PUBLIC_URL + '/details/:movieID/buy'} component={Reservation} />
+        <Route path={process.env.PUBLIC_URL + '/details/:movieID'} component={Details} />
+        <Route path={process.env.PUBLIC_URL + '/'} component={Home} />
       </Switch>
     </Main>
   </BrowserRouter>

@@ -1,5 +1,6 @@
 import React from 'react';
 import Seat from './Seat';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -177,7 +178,11 @@ export default class Reservation extends React.Component {
         <StyledTopMovieInfo>
           <h1>{this.state.movieName}</h1>
           <h3>20.01.2019   20:45</h3>
-          <StyledCloseButton> X </StyledCloseButton>
+          <Link to={`${process.env.PUBLIC_URL}/details/${this.props.match.params.movieID}`}>
+            <StyledCloseButton>
+              <FontAwesomeIcon icon='arrow-left' size='1x' />
+            </StyledCloseButton>
+          </Link>
         </StyledTopMovieInfo>
         <StyledScreen>SCREEN</StyledScreen>
         <StyledScreeningRoom>
