@@ -32,12 +32,12 @@ export default class Details extends Component {
         year: res.release_date.split('-')[0]
       });
     });
-    tmdb(`/movie/${id}/images`, { language: 'en' }).then(res => {
+    tmdb(`/movie/${id}/images`).then(res => {
       if (!res || !res.posters || !res.posters[0]) return;
       if (!res.posters[0].file_path) return;
       this.setState({ img: res.posters[0].file_path });
     });
-    tmdb(`/movie/${id}/videos`, { language: 'en' }).then(res => {
+    tmdb(`/movie/${id}/videos`).then(res => {
       if (!res || !res.results || !res.results[0]) return;
       if (!res.results[0].key) return;
       // console.log(res.results[0]);
