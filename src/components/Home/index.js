@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import MovieList from './MovieList';
 
 const Header = styled.h2`
-  padding-left: 5rem;
+  margin: 1rem 0 0 5rem;
 `;
 
 export default props => {
