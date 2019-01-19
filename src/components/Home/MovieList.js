@@ -85,11 +85,13 @@ export default class MovieList extends Component {
     tmdb(`/discover/movie`, {
       sort_by: `${props.sortBy}.desc` || ''
     }).then(({ results }) => {
+      console.log(results);
       this.setState({
         movies: results,
         moviesList: [...this.state.moviesList, fetchTilesToArray(results)]
       });
     });
+    
   }
   slideLeft () {
     if (this.state.page === 0) return;

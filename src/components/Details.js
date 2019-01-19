@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {Link} from 'react-router-dom';
 import tmdb from '../apis/tmdb';
 import styled from 'styled-components';
 import YoutubeEmbedVideo from 'youtube-embed-video';
@@ -63,6 +64,11 @@ export default class Details extends Component {
           <p>{this.state.overview}</p>
           <h4>Genres:</h4>
           <p>{!Array.isArray(this.state.genres) ? null : this.state.genres.map(c => c.name).join(', ')}</p>
+            <Link>
+              <div>
+                <button>AAA</button>
+              </div>
+            </Link>
           {!this.state.trailerID ? null
             : <YoutubeEmbedVideo videoId={this.state.trailerID} suggestions={false} />}
         </StyledContent>
