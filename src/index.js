@@ -10,7 +10,7 @@ import Navbar from './components/Navbar';
 import Reservation from './components/Reservation';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faArrowLeft, faArrowRight, faHome, faShoppingCart} from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faArrowRight, faHome, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 library.add(faArrowLeft, faArrowRight, faHome, faShoppingCart);
 
 const Main = styled.div`
@@ -23,9 +23,9 @@ const App = () => (
     <Main>
       <Navbar />
       <Switch>
-        <Route path='/details/buytickets/:movieID' component={Reservation} />
-        <Route path='/details/:movieID' component={Details} />
-        <Route exact path='/' component={Home} />
+        <Route path={process.env.PUBLIC_URL + '/details/:movieID/buy'} component={Reservation} />
+        <Route path={process.env.PUBLIC_URL + '/details/:movieID'} component={Details} />
+        <Route path={process.env.PUBLIC_URL + '/'} component={Home} />
       </Switch>
     </Main>
   </BrowserRouter>

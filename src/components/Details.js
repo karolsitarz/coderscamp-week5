@@ -65,7 +65,7 @@ export default class Details extends Component {
           <p>{this.state.overview}</p>
           <h4>Genres:</h4>
           <p>{!Array.isArray(this.state.genres) ? null : this.state.genres.map(c => c.name).join(', ')}</p>
-          <Link to={`/details/buytickets/${this.props.match.params.movieID}`}>
+          <Link to={`${process.env.PUBLIC_URL}/details/${this.props.match.params.movieID}/buy`}>
             <StyledButton type='button' value='BUY TICKETS' />
           </Link>
           {!this.state.trailerID ? null
