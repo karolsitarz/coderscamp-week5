@@ -54,7 +54,7 @@ export default class Poster extends Component {
   render () {
     const { alt, img, movieID } = this.props;
     return (
-      <Link to={`/details/${movieID}`}>
+      <Link to={`${process.env.PUBLIC_URL}/details/${movieID}`}>
         <StyledPoster>
           <StyledPosterImg
             ref={e => (this.imgRef = e)}

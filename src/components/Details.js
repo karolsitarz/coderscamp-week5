@@ -33,12 +33,20 @@ export default class Details extends Component {
       });
     });
     tmdb(`/movie/${id}/images`).then(res => {
-      if (!res || !res.posters || !res.posters[0]) return;
+      if (!res || !res.posters) return;
+      if (!res.posters[0]) {
+        this.setState({ img: '' });
+        return;
+      }
       if (!res.posters[0].file_path) return;
       this.setState({ img: res.posters[0].file_path });
     });
     tmdb(`/movie/${id}/videos`).then(res => {
-      if (!res || !res.results || !res.results[0]) return;
+      if (!res || !res.results) return;
+      if (!res.results[0]) {
+        this.setState({ trailerID: '' });
+        return;
+      }
       if (!res.results[0].key) return;
       // console.log(res.results[0]);
       this.setState({ trailerID: res.results[0].key });
