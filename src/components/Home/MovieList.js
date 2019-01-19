@@ -9,6 +9,7 @@ import Poster from './MovieListPoster';
 const StyledMoviePanelContainer = styled.section`
   position: relative;
   width: 100vw;
+  max-width: 1200px;
   overflow-x: hidden;
 `;
 
@@ -16,6 +17,7 @@ const StyledMoviePanelContainer = styled.section`
 const StyledMoviePanel = styled.div`
   position: relative;
   width: 100vw;
+  max-width: 1200px;
   display: flex;
   align-items: center;
   justify-content: space-evenly;
@@ -27,7 +29,7 @@ const StyledMoviePanel = styled.div`
 const StyledScrollingList = styled.div`
   display: inline-flex;
   transition: transform .5s ease;
-  transform: ${props => `translateX(-${props.$page * 100}vw)`};
+  transform: ${props => `translateX(calc(-100% / ${props.$all.length} * ${props.$page}))`};
 `;
 
 // buttons
@@ -130,7 +132,7 @@ export default class MovieList extends Component {
 
     return (
       <StyledMoviePanelContainer>
-        <StyledScrollingList $page={page}>
+        <StyledScrollingList $page={page} $all={moviesList}>
           {moviesList}
         </StyledScrollingList>
 
