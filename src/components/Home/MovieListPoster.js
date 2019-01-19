@@ -18,7 +18,7 @@ const StyledPoster = styled.div`
   background: #00000022;
   border-radius: 1em;
   overflow: hidden;
-  margin: 1em;
+  margin: .5em;
   box-shadow: 0 0 2em 0px #00000022;
   transform: scale(0.95);
 
