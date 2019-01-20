@@ -1,4 +1,4 @@
-# CodersCamp - Week5 - A Node.js backend
+# CodersCamp - Week5 - A React app
 A React-based web app, for browsing, searching, getting info and booking tickets to various movies. 
 
 ## Screenshots
