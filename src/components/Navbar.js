@@ -31,6 +31,9 @@ const StyledNavbar = styled.nav`
     top: 0;
     z-index: -1;
     left: calc(-50vw + 600px);
+    @media screen and (max-width: 1200px) {
+      left: 0;
+    }
   }
 `;
 
